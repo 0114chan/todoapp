@@ -26,6 +26,22 @@ bun dev
 
 반응형 UI: 다양한 화면 크기에서 최적화된 사용자 경험 제공
 
+<img width="769" alt="화면 캡처 2025-01-03 232128" src="https://github.com/user-attachments/assets/a1f7d546-5196-4cc4-a96e-d64b21dfa18e" />
+<img width="778" alt="화면 캡처 2025-01-03 232151" src="https://github.com/user-attachments/assets/8c929176-d9d7-4598-ac74-9857ba9db7df" />
+<img width="779" alt="화면 캡처 2025-01-03 232204" src="https://github.com/user-attachments/assets/701c6668-e2c5-436c-a7f5-17cd5314259e" />
+<img width="779" alt="화면 캡처 2025-01-03 232216" src="https://github.com/user-attachments/assets/ba9e213f-35c4-4da7-ade7-f0c475ad0972" />
+
+
+
+
+
+
+
+
+
+
+
+
 ## 기술 스택
 
 프론트엔드: Next.js, React
