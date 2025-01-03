@@ -90,6 +90,8 @@ API: Fetch를 사용한 RESTful API 통신
 
 ## 주요 파일 설명
 
+### tenantId : c_todo
+
 /src/app/items/[itemId]/page.tsx
 
 특정 할 일의 상세 정보를 가져오고, 수정 및 삭제를 수행하는 페이지입니다. 이미지 업로드와 메모 기능도 포함되어 있습니다.
