@@ -1,21 +1,28 @@
+/* src/styles/globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@layer base {
+    body {
+        @apply bg-slate-50 text-slate-900;
+    }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+@layer components {
+    .empty-state {
+        @apply flex flex-col items-center justify-center p-8 text-slate-500;
+    }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+    .empty-state-icon {
+        @apply w-24 h-24 mb-4 text-slate-300;
+    }
+
+    .empty-state-text {
+        @apply text-center mb-2;
+    }
+
+    .empty-state-subtext {
+        @apply text-sm text-slate-400;
+    }
 }
