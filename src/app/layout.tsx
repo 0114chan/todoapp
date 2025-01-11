@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
     title: 'Do it - Todo App',
-    description: 'A simple todo application',
+    description: 'Simple todo application',
 }
 
 export default function RootLayout({
