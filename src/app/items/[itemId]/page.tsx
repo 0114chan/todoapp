@@ -2,13 +2,15 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'  // useParams 추가
 import { Item } from '@/lib/types'
 import { updateTodo, deleteTodo, uploadImage } from '@/lib/api'
 
-const TENANT_ID = 'c_todo' // API 테넌트 ID
+const TENANT_ID = 'c_todo'
 
-export default function ItemDetail({ params }: { params: { itemId: string } }) {
+export default function ItemDetail() {  // params prop 제거
+    const params = useParams()  // useParams 훅 사용
+    const itemId = params?.itemId as string  // itemId 추출
     const router = useRouter()
     const [item, setItem] = useState<Item | null>(null)
     const [name, setName] = useState('')
@@ -23,7 +25,7 @@ export default function ItemDetail({ params }: { params: { itemId: string } }) {
             try {
                 setIsLoading(true)
                 const response = await fetch(
-                    `https://assignment-todolist-api.vercel.app/api/${TENANT_ID}/items/${params.itemId}`
+                    `https://assignment-todolist-api.vercel.app/api/${TENANT_ID}/items/${itemId}`  // params.itemId 대신 itemId 사용
                 )
 
                 if (!response.ok) {
@@ -44,10 +46,10 @@ export default function ItemDetail({ params }: { params: { itemId: string } }) {
             }
         }
 
-        if (params.itemId) {
+        if (itemId) {
             fetchItem()
         }
-    }, [params.itemId])
+    }, [itemId])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
