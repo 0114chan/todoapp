@@ -14,27 +14,119 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Todo App
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+이 프로젝트는 Next.js와 Tailwind CSS를 활용하여 제작된 간단한 Todo 애플리케이션입니다. 사용자는 할 일을 추가, 수정, 삭제할 수 있으며, 완료 상태를 관리할 수 있습니다. 또한 메모 기능과 이미지 업로드 기능을 지원합니다.
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## 주요 기능
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+할 일 관리: 할 일 추가, 수정, 삭제 및 완료 상태 관리
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+메모 기능: 각 할 일에 메모를 추가 가능
 
-## Learn More
+반응형 UI: 다양한 화면 크기에서 최적화된 사용자 경험 제공
 
-To learn more about Next.js, take a look at the following resources:
+<img width="769" alt="화면 캡처 2025-01-03 232128" src="https://github.com/user-attachments/assets/a1f7d546-5196-4cc4-a96e-d64b21dfa18e" />
+<img width="778" alt="화면 캡처 2025-01-03 232151" src="https://github.com/user-attachments/assets/8c929176-d9d7-4598-ac74-9857ba9db7df" />
+<img width="779" alt="화면 캡처 2025-01-03 232204" src="https://github.com/user-attachments/assets/701c6668-e2c5-436c-a7f5-17cd5314259e" />
+<img width="779" alt="화면 캡처 2025-01-03 232216" src="https://github.com/user-attachments/assets/ba9e213f-35c4-4da7-ade7-f0c475ad0972" />
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+
+
+
+
+
+
+
+## 기술 스택
+
+프론트엔드: Next.js, React
+
+스타일링: Tailwind CSS
+
+API: Fetch를 사용한 RESTful API 통신
+
+타이핑: TypeScript
+
+# 폴더 구조
+/src
+
+├── app
+
+│   ├── items
+
+│   │   ├── [itemId]
+
+│   │   │   └── page.tsx  // 특정 할 일의 상세 페이지
+
+│   └── layout.tsx        // 전역 레이아웃 설정
+
+├── components
+
+│   └── ui
+
+│       ├── Button.tsx    // 버튼 컴포넌트
+
+│       ├── EmptyState.tsx // 빈 상태 UI 컴포넌트
+
+│       ├── Input.tsx     // 입력 필드 컴포넌트
+
+│       └── TodoItem.tsx  // 단일 할 일 항목 컴포넌트
+
+├── lib
+
+│   ├── api.ts            // API 함수 정의
+
+│   └── types.ts          // TypeScript 타입 정의
+
+├── styles
+
+│   └── globals.css       // 전역 스타일
+
+
+## 주요 파일 설명
+
+### tenantId : c_todo
+
+/src/app/items/[itemId]/page.tsx
+
+특정 할 일의 상세 정보를 가져오고, 수정 및 삭제를 수행하는 페이지입니다. 이미지 업로드와 메모 기능도 포함되어 있습니다.
+
+/src/app/layout.tsx
+
+앱의 전역 레이아웃을 정의합니다. 헤더와 컨테이너 스타일이 포함되어 있습니다.
+
+/src/components/ui/Button.tsx
+
+다양한 스타일의 버튼을 제공하는 재사용 가능한 컴포넌트입니다. primary, secondary, danger의 세 가지 변형을 지원합니다.
+
+/src/components/ui/EmptyState.tsx
+
+할 일이 없거나 완료된 할 일이 없을 때 표시되는 빈 상태 컴포넌트입니다.
+
+/src/components/ui/Input.tsx
+
+사용자 입력 필드를 위한 재사용 가능한 컴포넌트입니다.
+
+/src/components/ui/TodoItem.tsx
+
+단일 할 일을 표시하는 컴포넌트로, 클릭 시 상세 페이지로 이동합니다.
+
+/src/lib/api.ts
+
+할 일 목록 가져오기, 생성, 수정, 삭제 및 이미지 업로드를 처리하는 API 함수들이 정의되어 있습니다.
+
+/src/lib/types.ts
+
+## 실패
+이미지 업로드
+
+ui그대로의 이미지 이용 및 레이어 만들기
+
+
+
+애플리케이션에서 사용되는 TypeScript 타입이 정의되어 있습니다. 예: Item, CreateItemDto, UpdateItemDto.
