@@ -2,15 +2,20 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter, useParams } from 'next/navigation'  // useParams 추가
+import { useRouter, useParams } from 'next/navigation'
 import { Item } from '@/lib/types'
 import { updateTodo, deleteTodo, uploadImage } from '@/lib/api'
+import Image from 'next/image'
+
 
 const TENANT_ID = 'c_todo'
+const MAX_IMAGE_SIZE_MB = 5;
+const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
+const VALID_FILENAME_REGEX = /^[a-zA-Z0-9._-]+$/;
 
-export default function ItemDetail() {  // params prop 제거
-    const params = useParams()  // useParams 훅 사용
-    const itemId = params?.itemId as string  // itemId 추출
+export default function ItemDetail() {
+    const params = useParams()
+    const itemId = params?.itemId as string
     const router = useRouter()
     const [item, setItem] = useState<Item | null>(null)
     const [name, setName] = useState('')
@@ -19,13 +24,15 @@ export default function ItemDetail() {  // params prop 제거
     const [isLoading, setIsLoading] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [imageError, setImageError] = useState<string | null>(null)
+    const [imagePreview, setImagePreview] = useState<string | null>(null)
 
     useEffect(() => {
         const fetchItem = async () => {
             try {
                 setIsLoading(true)
                 const response = await fetch(
-                    `https://assignment-todolist-api.vercel.app/api/${TENANT_ID}/items/${itemId}`  // params.itemId 대신 itemId 사용
+                    `https://assignment-todolist-api.vercel.app/api/${TENANT_ID}/items/${itemId}`
                 )
 
                 if (!response.ok) {
@@ -37,6 +44,9 @@ export default function ItemDetail() {  // params prop 제거
                 setName(data.name)
                 setMemo(data.memo || '')
                 setIsCompleted(data.isCompleted)
+                if (data.imageUrl) {
+                    setImagePreview(data.imageUrl)
+                }
                 setError(null)
             } catch (error) {
                 console.error('Failed to fetch item:', error)
@@ -89,14 +99,31 @@ export default function ItemDetail() {  // params prop 제거
         const file = e.target.files?.[0]
         if (!file || !item) return
 
+        if (!VALID_FILENAME_REGEX.test(file.name)) {
+            setImageError('이미지 파일 이름은 영어로만 이루어져야 합니다.')
+            return
+        }
+
+        if (file.size > MAX_IMAGE_SIZE_BYTES) {
+            setImageError(`이미지 파일 크기는 ${MAX_IMAGE_SIZE_MB}MB 이하여야 합니다.`)
+            return
+        }
+
         try {
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string)
+            }
+            reader.readAsDataURL(file)
+
             setIsLoading(true)
             const imageUrl = await uploadImage(file)
             await updateTodo(item.id, { imageUrl })
-            setError(null)
+            setImageError(null)
         } catch (error) {
             console.error('Failed to upload image:', error)
-            setError('이미지 업로드에 실패했습니다.')
+            setImageError('이미지 업로드에 실패했습니다.')
+            setImagePreview(null)
         } finally {
             setIsLoading(false)
         }
@@ -104,7 +131,7 @@ export default function ItemDetail() {  // params prop 제거
 
     if (isLoading && !item) {
         return (
-            <div className="max-w-[800px] mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto px-4 py-8">
                 <div className="text-center text-slate-500">로딩 중...</div>
             </div>
         )
@@ -112,7 +139,7 @@ export default function ItemDetail() {  // params prop 제거
 
     if (error) {
         return (
-            <div className="max-w-[800px] mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto px-4 py-8">
                 <div className="bg-rose-100 text-rose-700 p-4 rounded-lg">
                     {error}
                 </div>
@@ -121,7 +148,7 @@ export default function ItemDetail() {  // params prop 제거
     }
 
     return (
-        <div className="max-w-[800px] mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto px-4 py-8">
             <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm">
                 <div className="p-6">
                     <div className="flex items-center gap-3 mb-6">
@@ -185,17 +212,39 @@ export default function ItemDetail() {  // params prop 제거
                             id="imageUpload"
                             className="hidden"
                         />
-                        <label
-                            htmlFor="imageUpload"
-                            className="flex flex-col items-center justify-center cursor-pointer"
-                        >
-                            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-2">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path d="M12 4v16m-8-8h16" strokeWidth="2" strokeLinecap="round"/>
-                                </svg>
+                        {!imagePreview ? (
+                            <label
+                                htmlFor="imageUpload"
+                                className="flex flex-col items-center justify-center cursor-pointer"
+                            >
+                                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-2">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M12 4v16m-8-8h16" strokeWidth="2" strokeLinecap="round" />
+                                    </svg>
+                                </div>
+                                <p className="text-slate-400 text-sm">클릭하여 이미지를 업로드하세요</p>
+                            </label>
+                        ) : (
+                            <div className="relative w-full aspect-video">
+                                <Image
+                                    src={imagePreview}
+                                    alt="Uploaded preview"
+                                    fill
+                                    className="rounded-lg object-cover"
+                                />
+                                <label
+                                    htmlFor="imageUpload"
+                                    className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors"
+                                >
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-600">
+                                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                                    </svg>
+                                </label>
                             </div>
-                            <p className="text-slate-400 text-sm">클릭하여 이미지를 업로드하세요</p>
-                        </label>
+                        )}
+                        {imageError && (
+                            <p className="text-rose-500 text-sm mt-2">{imageError}</p>
+                        )}
                     </div>
                 </div>
 

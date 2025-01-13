@@ -1,4 +1,3 @@
-// src/components/ui/TodoItem.tsx
 import { Item } from '@/lib/types'
 import Link from 'next/link'
 
@@ -36,9 +35,20 @@ export function TodoItem({ todo, onToggle }: TodoItemProps) {
                         </svg>
                     )}
                 </button>
-                <span className={todo.isCompleted ? 'text-slate-500' : 'text-slate-900'}>
-                    {todo.name}
-                </span>
+                <div className="flex items-center gap-3 flex-1">
+                    <span className={todo.isCompleted ? 'text-slate-500' : 'text-slate-900'}>
+                        {todo.name}
+                    </span>
+                    {todo.imageUrl && (
+                        <div className="w-8 h-8 rounded-md overflow-hidden flex-shrink-0">
+                            <img
+                                src={todo.imageUrl}
+                                alt={todo.name}
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                    )}
+                </div>
             </div>
         </Link>
     )
